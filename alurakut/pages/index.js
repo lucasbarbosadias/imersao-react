@@ -22,6 +22,28 @@ function ProfileSidebar(propriedades) {
   )
 }
 
+function ProfileRelationsBox(propriedades) {
+  return (
+    <ProfileRelationsBoxWrapper>
+      <h2 className="smallTitle">
+        {propriedades.title} ({propriedades.items.length})
+      </h2>
+      <ul>
+        {/* {seguidores.map((itemAtual) => {
+          return (
+            <li key={itemAtual}>
+              <a href={`https://github.com/${itemAtual}.png`}>
+                <img src={itemAtual.image} />
+                <span>{itemAtual.title}</span>
+              </a>
+            </li>
+          )
+        })} */}
+      </ul>
+    </ProfileRelationsBoxWrapper>
+  )
+}
+
 export default function Home() {
   const usuarioAleatorio = 'lucasbarbosadias';
   const [comunidades, setComunidades] = React.useState([{
@@ -30,7 +52,6 @@ export default function Home() {
     image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg'
   }]);
 
-  console.log('Nosso teste', );
   //const comunidades = ['Alurakut'];
   const pessoasFavoritas = [
     'juunegreiros',
@@ -40,6 +61,17 @@ export default function Home() {
     'marcobrunodev',
     'felipefialho'
   ]
+  const [seguidores, setSeguidores] = React.useState([]);
+  React.useEffect(function(){
+    fetch('https://api.github.com/users/lucasbarbosadias/followers')
+    .then(function(respostaDoServidor){
+      return respostaDoServidor.json();
+    })  
+    .then(function(respostaCompleta){
+      setSeguidores(respostaCompleta);
+    })
+  }, []) //esse , [] é um parametro para executar isso somente uma vez
+         //caso eu coloque uma variavel dentro dele, sempre que ela sofrer alteração ele escuta o estado e executa a função
 
   return (
     <>
@@ -95,9 +127,10 @@ export default function Home() {
             </form>
           </Box>
         </div>
-        <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea'}}>
+        <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea'}}>                    
+          <ProfileRelationsBox title="seguidores" items={seguidores}/>
           <ProfileRelationsBoxWrapper>
-          <h2 className="smallTitle">
+            <h2 className="smallTitle">
               Comunidades ({comunidades.length})
             </h2>
             <ul>
